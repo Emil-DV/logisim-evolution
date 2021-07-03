@@ -1551,8 +1551,8 @@ public class HexFile {
           if (word.startsWith("0x") || word.startsWith("0X")) j = 2;
           for (; j < m; j++) {
             int d;
-            // Check for the binary literal escape character "'"
-            if (word.startsWith("'")) {
+            // Check for the binary literal escape character "'" starting a 2 character word
+            if (word.startsWith("'") && word.length() == 2) {
               d = word.charAt(1);
             } else {
               try {
@@ -1601,8 +1601,8 @@ public class HexFile {
           String word = curWords[i];
           if (word.startsWith("0x") || word.startsWith("0X")) word = word.substring(2);
           long val;
-          // Check for the binary literal escape character "'"
-          if (word.startsWith("'")) {
+          // Check for the binary literal escape character "'" starting a 2 character word
+          if (word.startsWith("'") && word.length() == 2) {
         	  val = word.charAt(1);
           } else {
 	          try {
