@@ -1551,12 +1551,17 @@ public class HexFile {
           if (word.startsWith("0x") || word.startsWith("0X")) j = 2;
           for (; j < m; j++) {
             int d;
-            try {
-              d = hex2int(word.charAt(i));
-            } catch (NumberFormatException e) {
-              warn(
-                  "Character '%s' is not a hex digit.", OutputStreamEscaper.escape(word.charAt(i)));
-              continue;
+            // Check for the binary literal escape character "'"
+            if (word.startsWith("'")) {
+              d = word.charAt(1);
+            } else {
+              try {
+                d = hex2int(word.charAt(i));
+              } catch (NumberFormatException e) {
+                warn(
+                    "Character '%s' is not a hex digit.", OutputStreamEscaper.escape(word.charAt(i)));
+                continue;
+              }
             }
             if (left) bytes[bLen++] = (byte) (d << 4);
             else bytes[bLen - 1] |= (byte) d;
@@ -1596,11 +1601,16 @@ public class HexFile {
           String word = curWords[i];
           if (word.startsWith("0x") || word.startsWith("0X")) word = word.substring(2);
           long val;
-          try {
-            val = hex2ulong(word);
-          } catch (Exception e) {
-            warn("Data word \"%s\" contains non-hex characters.", OutputStreamEscaper.escape(word));
-            continue;
+          // Check for the binary literal escape character "'"
+          if (word.startsWith("'")) {
+        	  val = word.charAt(1);
+          } else {
+	          try {
+	            val = hex2ulong(word);
+	          } catch (Exception e) {
+	            warn("Data word \"%s\" contains non-hex characters.", OutputStreamEscaper.escape(word));
+	            continue;
+	          }
           }
           set(offs++, val);
         }
